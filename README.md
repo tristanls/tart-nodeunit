@@ -1,5 +1,9 @@
 # tart-nodeunit
 
+_Stability: 1 - [Experimental](https://github.com/tristanls/stability-index#stability-1---experimental)_
+
+[![NPM version](https://badge.fury.io/js/tart-nodeunit.png)](http://npmjs.org/package/tart-nodeunit)
+
 Adapter for `nodeunit` testing ([tart](https://github.com/organix/tartjs) module)
 
 ## Contributors
