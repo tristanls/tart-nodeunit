@@ -75,12 +75,35 @@ test["example from tart-tracing exercises all actor primitives"] = function (tes
 **Testing API**
 
   * [test.dispatch()](#testdispatch)
-  * [test.eventLoop(\[control\])](testeventloopcontrol)
+  * [test.eventLoop(\[control\])](#testeventloopcontrol)
   * [test.sponsor(behavior)](#testsponsorbehavior)
 
 ### test.dispatch()
 
   * Return: _Effect_ or `false`. Effect of dispatching the next `event` or `false` if no events exists for dispatch.
+
+Dispatch the next `event`.
+
+```javascript
+var test = module.exports = {};
+test["dispatch dispatches a single event"] = function (test) {
+    test.expect(3);
+
+    var value;
+
+    var actor = test.sponsor(function (message) {
+        test.ok(message);
+        value = message;
+        this.self(message + 1);
+    });
+    actor(1); // send
+
+    var effect = test.dispatch();
+    test.notStrictEqual(effect, false);
+    test.equal(value, 1);
+    test.done();
+};
+```
 
 ### test.eventLoop([control])
 
@@ -96,7 +119,7 @@ By default, calling `tracing.eventLoop()` with no parameters dispatches all even
 
 ```javascript
 var test = module.exports = {};
-test["dispatch delivers limited number of events"] = function (test) {
+test["eventLoop delivers limited number of events"] = function (test) {
     test.expect(4);
 
     var actor = test.sponsor(function (message) {  // create

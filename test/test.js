@@ -83,7 +83,7 @@ test["eventLoop delivers limited number of events"] = function (test) {
     test.done();
 };
 
-test["dispatch delivers a single event"] = function (test) {
+test["dispatch dispatches a single event"] = function (test) {
     test.expect(3);
 
     var value;
