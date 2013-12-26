@@ -30,5 +30,5 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 "use strict";
 
-var reporter = require('nodeunit').reporters.default;
+var reporter = require('../../index.js').reporters.default;
 reporter.run(['examples/revocable/test.js']);

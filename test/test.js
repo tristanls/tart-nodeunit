@@ -30,13 +30,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 "use strict";
 
-var adapter = require('../index.js');
+var tartNodeunit = require('../index.js');
 
 var test = module.exports = {};
 
-test["dispatch delivers all messages and returns `true`"] = function (test) {
+test["eventLoop delivers all messages and returns `true`"] = function (test) {
     test.expect(3);
-    var testing = adapter.testing(test);
 
     var first = function first(message) {
         test.equal(message, 'first');
@@ -51,44 +50,59 @@ test["dispatch delivers all messages and returns `true`"] = function (test) {
         throw new Error('Should not be called!');
     };
 
-    var actor = testing.sponsor(first);
+    var actor = test.sponsor(first);
     actor('first');
     
-    test.ok(testing.dispatch());
+    test.ok(test.eventLoop());
     test.done();
 };
 
 test["sponsor creates an actor"] = function (test) {
     test.expect(2);
-    var testing = adapter.testing(test);
 
-    var actor = testing.sponsor(function (message) {  // create
+    var actor = test.sponsor(function (message) {  // create
         test.ok(message);
     });
     actor(true);  // send
 
-    test.ok(testing.dispatch());
+    test.ok(test.eventLoop());
     test.done();
 };
 
-test["dispatch delivers limited number of events"] = function (test) {
+test["eventLoop delivers limited number of events"] = function (test) {
     test.expect(4);
-    var testing = adapter.testing(test);
 
-    var actor = testing.sponsor(function (message) {  // create
+    var actor = test.sponsor(function (message) {  // create
         test.ok(message);
         this.self(message + 1);  // send
     });
     actor(1);  // send
 
-    var done = testing.dispatch({ count: 3 });
+    var done = test.eventLoop({ count: 3 });
     test.strictEqual(done, false);
+    test.done();
+};
+
+test["dispatch delivers a single event"] = function (test) {
+    test.expect(3);
+
+    var value;
+
+    var actor = test.sponsor(function (message) {
+        test.ok(message);
+        value = message;
+        this.self(message + 1);
+    });
+    actor(1); // send
+
+    var effect = test.dispatch();
+    test.notStrictEqual(effect, false);
+    test.equal(value, 1);
     test.done();
 };
 
 test["example from tart-tracing exercises all actor primitives"] = function (test) {
     test.expect(4);
-    var testing = adapter.testing(test);
 
     var oneTimeBeh = function oneTimeBeh(message) {
         test.equal(message, 'bar');
@@ -103,10 +117,10 @@ test["example from tart-tracing exercises all actor primitives"] = function (tes
         test.equal(message, 'baz');
     };
 
-    var actor = testing.sponsor(oneTimeBeh);  // create
+    var actor = test.sponsor(oneTimeBeh);  // create
     actor('bar');  // send
     actor('baz');  // send
 
-    test.ok(testing.dispatch());
+    test.ok(test.eventLoop());
     test.done();
 };

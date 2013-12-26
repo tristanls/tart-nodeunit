@@ -1,6 +1,6 @@
 /*
 
-test.js - test script
+index.js - "reporters": tart-nodeunit reporters
 
 The MIT License (MIT)
 
@@ -30,5 +30,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 "use strict";
 
-var reporter = require('../index.js').reporters.default;
-reporter.run(['test']);
+module.exports = {
+    default: require('./default.js')
+};

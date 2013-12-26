@@ -30,14 +30,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 "use strict";
 
-var adapter = require('../../index.js');
 var revocable = require('./implementation.js');
 
 var test = module.exports = {};
 
 test['proxy() should return a revocable proxy and a revoke capability'] = function (test) {
     test.expect(3);
-    var testing = adapter.testing(test);
 
     var secret, proxy, revoke;
 
@@ -57,15 +55,15 @@ test['proxy() should return a revocable proxy and a revoke capability'] = functi
         proxy('hello again'); // should never reach `secret`
     };
 
-    secret = testing.sponsor(secretBeh);
+    secret = test.sponsor(secretBeh);
 
     var capabilities = revocable.proxy(secret);
-    proxy = testing.sponsor(capabilities.proxyBeh);
-    revoke = testing.sponsor(capabilities.revokeBeh);
+    proxy = test.sponsor(capabilities.proxyBeh);
+    revoke = test.sponsor(capabilities.revokeBeh);
 
     proxy('hello');
 
 	var ignoreExceptions = function fail(exception) {};
-    test.ok(testing.dispatch({ fail: ignoreExceptions }));
+    test.ok(test.eventLoop({ fail: ignoreExceptions }));
     test.done();
 };

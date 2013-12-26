@@ -32,51 +32,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 var tart = require('tart-tracing');
 
-/*
-  * `test`: _Object_ nodeunit test object.
-  * Return: _Object_ The testing control object.
-    * `sponsor`: _Function_ `function (behavior) {}` A capability to create
-        new actors.
-    * `dispatch`: _Function_ `function ([options]) {}` Function to call to
-        dispatch events.  Returns `true` when there are no more events.
-    * `tracing`: _Object_ Tracing control object.
-*/
-module.exports.testing = function testing(test) {
-    var tracing = tart.tracing();
-/*
-    var tracing = tart.tracing({
-        enqueue: function enqueue(eventQueue, events) {
-            Array.prototype.push.apply(eventQueue, events);
-        },
-        dequeue: function dequeue(eventQueue) {
-            return eventQueue.shift();
-        }
-    });
-*/
+var tartNodeunit = module.exports = {};
 
-    var dispatch = function dispatch(options) {
-        options = options || {};
-        options.fail = options.fail || function fail(exception) {
-            throw exception;
-        };
-
-        while ((options.count === undefined) || (--options.count >= 0)) {
-            var effect = tracing.dispatch();
-//            console.log(effect);
-            if (effect === false) {
-                return true;  // event queue exhausted
-            }
-            if (effect.exception) {
-                options.fail(effect.exception);  // report exception
-            }
-        }
-        return false;  // limit reached, events may remain
-    }
-
-    return {
-        sponsor: tracing.sponsor,
-        dispatch: dispatch,
-        tracing: tracing
-    };
-    return exports;
-};
+tartNodeunit.reporters = require('./reporters');

@@ -8,8 +8,8 @@
   },
   "main": "index.js",
   "dependencies": {
-    "nodeunit": "0.8.1",
-    "tart-tracing": "0.1.3"
+    "nodeunit": "0.8.2",
+    "tart-tracing": "0.1.5"
   },
   "repository": {
     "type": "git",
